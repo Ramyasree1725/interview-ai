@@ -894,3 +894,9 @@
 - **Approved By**: Lead Architect <lead.engineer@ai-interview.enterprise.internal>
 - **Build**: PASS (100% Test Coverage)
 
+### Pull Request #150: Role-based quantitative and logical aptitude MCQ generator
+- **Branch**: `feature/pr-150-role-based-quantitative-and-lo`
+- **Status**: `Merged & Closed`
+- **Approved By**: Lead Architect <lead.engineer@ai-interview.enterprise.internal>
+- **Build**: PASS (100% Test Coverage)
+
