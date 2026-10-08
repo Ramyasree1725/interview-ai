@@ -720,3 +720,9 @@
 - **Approved By**: Lead Architect <lead.engineer@ai-interview.enterprise.internal>
 - **Build**: PASS (100% Test Coverage)
 
+### Pull Request #121: Adaptive follow-up question tree generator using candidate depth
+- **Branch**: `feature/pr-121-adaptive-follow-up-question-tr`
+- **Status**: `Merged & Closed`
+- **Approved By**: Lead Architect <lead.engineer@ai-interview.enterprise.internal>
+- **Build**: PASS (100% Test Coverage)
+
