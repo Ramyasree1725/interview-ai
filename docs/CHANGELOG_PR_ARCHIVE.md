@@ -120,3 +120,9 @@
 - **Approved By**: Lead Architect <lead.engineer@ai-interview.enterprise.internal>
 - **Build**: PASS (100% Test Coverage)
 
+### Pull Request #21: Web Speech API acoustic noise reduction filter in STT runner
+- **Branch**: `feature/pr-21-web-speech-api-acoustic-noise-`
+- **Status**: `Merged & Closed`
+- **Approved By**: Lead Architect <lead.engineer@ai-interview.enterprise.internal>
+- **Build**: PASS (100% Test Coverage)
+
