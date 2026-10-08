@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InterviewAI PRO — Senior AI Interview & Placement Ecosystem</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+              400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+              800: '#3730a3', 900: '#312e81', 950: '#1e1b4b'
+            },
+            dark: {
+              800: '#0b1120', 850: '#070d19', 900: '#030712', 950: '#020409'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          },
+          animation: {
+            'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+            'float-slow': 'floatSlow 4s ease-in-out infinite',
+          },
+          keyframes: {
+            glowPulse: {
+              '0%, 100%': { opacity: '0.3', transform: 'scale(1)' },
+              '50%': { opacity: '0.6', transform: 'scale(1.05)' },
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18 & Babel CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      background-color: #030712;
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* Modern Glassmorphism & Mesh Glows */
+    .glass-panel {
+      background: rgba(11, 17, 32, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    .glass-card {
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      background: rgba(30, 41, 59, 0.6);
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.25);
+    }
+
+    .neon-border-indigo {
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.15), inset 0 0 15px rgba(99, 102, 241, 0.08);
+    }
+
+    .neon-border-emerald {
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), inset 0 0 15px rgba(16, 185, 129, 0.08);
+    }
+
+    .gradient-text-indigo {
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-text-gold {
+      background: linear-gradient(135deg, #fef08a 0%, #facc15 50%, #eab308 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #030712; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="selection:bg-indigo-600 selection:text-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- 1. MOCK TEST DATA (Technical + Aptitude MCQs) ---
+    const MOCK_TEST_DATA = [
+      {
+        id: "t1", section: "Technical Architecture",
+        question: "In Python, which of the following data structures is strictly IMMUTABLE and hashable?",
+        options: ["List", "Dictionary", "Set", "Tuple"],
+        correctIndex: 3,
+        explanation: "Tuples in Python are immutable, stored in contiguous memory, and hashable for dictionary keys."
+      },
+      {
+        id: "t2", section: "Technical Architecture",
+        question: "Which HTTP status code explicitly signifies that a new server resource was successfully CREATED?",
+        options: ["200 OK", "201 Created", "204 No Content", "400 Bad Request"],
+        correctIndex: 1,
+        explanation: "HTTP 201 Created is returned for successful resource generation (e.g. POST requests)."
+      },
+      {
+        id: "t3", section: "Database Systems",
+        question: "What is the primary architectural purpose of a B-Tree Index in relational databases (PostgreSQL/MySQL)?",
+        options: ["To encrypt sensitive table rows", "To reduce disk I/O and accelerate query retrieval", "To eliminate foreign keys", "To backup binary logs"],
+        correctIndex: 1,
+        explanation: "B-Tree indexes reduce lookup time from O(N) full table scans to O(log N) balanced tree traversals."
+      },
+      {
+        id: "t4", section: "Database Systems",
+        question: "In ACID transaction properties, what does 'Atomicity' guarantee?",
+        options: ["All operations in a transaction succeed completely or all fail (All-or-Nothing)", "Data is instantly available in all replicas", "Only one user can connect", "Schema cannot change"],
+        correctIndex: 0,
+        explanation: "Atomicity guarantees that if any operation fails, the entire transaction is rolled back completely."
+      },
+      {
+        id: "t5", section: "Frontend Engineering",
+        question: "In React, which hook is explicitly used to synchronize components with external systems and side-effects?",
+        options: ["useState", "useEffect", "useMemo", "useRef"],
+        correctIndex: 1,
+        explanation: "`useEffect` executes side-effects like network requests, DOM mutations, and event subscriptions."
+      },
+      {
+        id: "a1", section: "Quantitative Aptitude",
+        question: "A train running at 60 km/hr crosses an electric pole in 9 seconds. What is the length of the train?",
+        options: ["120 metres", "150 metres", "180 metres", "324 metres"],
+        correctIndex: 1,
+        explanation: "Speed in m/s = 60 * (5/18) = 50/3 m/s. Length = Speed * Time = (50/3) * 9 = 150 metres."
+      },
+      {
+        id: "a2", section: "Quantitative Aptitude",
+        question: "If a developer purchases cloud servers for ₹200/month and bills a client ₹250/month, what is the profit margin?",
+        options: ["20%", "25%", "30%", "15%"],
+        correctIndex: 1,
+        explanation: "Profit = ₹50. Profit % = (50 / 200) * 100 = 25%."
+      },
+      {
+        id: "a3", section: "Logical Reasoning",
+        question: "Determine the next number in the sequence: 2, 6, 12, 20, 30, ?",
+        options: ["40", "42", "44", "48"],
+        correctIndex: 1,
+        explanation: "Differences increase by +2 (+4, +6, +8, +10, +12). 30 + 12 = 42 (or n*(n+1): 6*7=42)."
+      },
+      {
+        id: "a4", section: "Logical Reasoning",
+        question: "If CODING is encrypted as DPEJOH in a cipher, how is PYTHON encrypted?",
+        options: ["QZUIPO", "QZUIOP", "QZVJPO", "PZUIPO"],
+        correctIndex: 0,
+        explanation: "Each character is shifted forward by +1: P->Q, Y->Z, T->U, H->I, O->P, N->O = QZUIPO."
+      },
+      {
+        id: "a5", section: "Quantitative Aptitude",
+        question: "Worker A completes a project in 6 days, and Worker B completes it in 10 days. In how many days can B alone complete the remainder?",
+        options: ["12 days", "15 days", "18 days", "20 days"],
+        correctIndex: 1,
+        explanation: "1/B = (1/6) - (1/10) = 2/30 = 1/15. Worker B alone requires 15 days."
+      }
+    ];
+
+    // --- 2. 5 RESUME-DRIVEN QUESTIONS FOR 5-STAR INTERVIEW ---
+    const RESUME_5_QUESTIONS = [
+      {
+        id: "rq1",
+        question: "From your uploaded resume, your core stack highlights Python, React, and REST APIs. Can you walk me through a high-concurrency architecture challenge you solved using them?",
+        category: "System Architecture Deep Dive",
+        keywords: ["architecture", "api", "database", "latency", "scale", "performance", "react", "python", "fastapi"],
+        modelAnswer: "In our production service, I architected an asynchronous microservice using FastAPI and React, deploying connection pooling and a Redis cache cluster that reduced API response latency by 42% under load."
+      },
+      {
+        id: "rq2",
+        question: "Walk me through one of the primary projects listed on your resume. What was your individual contribution to the database schema design and state management?",
+        category: "Project Architecture & Contribution",
+        keywords: ["project", "contribution", "state", "database", "schema", "backend", "api", "redux", "postgres"],
+        modelAnswer: "I owned the backend service layer, creating third-normal-form PostgreSQL schemas with composite indexes, and implemented normalized global state in Redux with optimistic UI reconciliation."
+      },
+      {
+        id: "rq3",
+        question: "In your resume projects, how did you secure user authentication, protect API tokens, and enforce strict input validation?",
+        category: "Security & Auth Verification",
+        keywords: ["jwt", "cookie", "httponly", "auth", "validation", "sanitize", "security", "csrf", "xss"],
+        modelAnswer: "We stored JWT access/refresh tokens inside HttpOnly, Secure, SameSite=Strict cookies to eliminate XSS risks, and utilized Pydantic schemas to validate and sanitize all incoming payloads."
+      },
+      {
+        id: "rq4",
+        question: "Describe a critical production bug or race condition you encountered. How did you isolate the root cause and ensure it could never recur?",
+        category: "Debugging & Reliability Engineering",
+        keywords: ["bug", "logs", "root cause", "debug", "indexes", "query", "fix", "testing", "race condition"],
+        modelAnswer: "I diagnosed a transaction deadlock using PostgreSQL query telemetry, resolved it by standardizing row lock acquisition order with optimistic locking, and added automated concurrency stress tests in CI."
+      },
+      {
+        id: "rq5",
+        question: "How did you set up containerization, automated testing, and CI/CD deployment pipelines for your resume projects?",
+        category: "DevOps & Cloud Delivery",
+        keywords: ["ci/cd", "github actions", "docker", "pipeline", "unit test", "deploy", "cloud", "aws"],
+        modelAnswer: "We configured GitHub Actions workflows to run unit and integration test suites on every pull request, producing multi-stage Docker images deployed to cloud infrastructure with zero downtime."
+      }
+    ];
+
+    // --- 3. CODING SANDBOX PROBLEM ---
+    const CODING_TEST_PROBLEM = {
+      title: "Reverse Array In-Place",
+      category: "Two Pointers & In-Place Mutation",
+      difficulty: "Easy / Standard",
+      description: "Write an optimal function `reverseString(s)` that reverses an array of characters in-place with O(1) extra auxiliary memory.",
+      examples: [
+        { input: '["h","e","l","l","o"]', output: '["o","l","l","e","h"]' },
+        { input: '["H","a","n","n","a","h"]', output: '["h","a","n","n","a","H"]' }
+      ],
+      starterCode: `function reverseString(s) {\n  // In-place two pointer solution\n  let left = 0, right = s.length - 1;\n  while (left < right) {\n    let temp = s[left];\n    s[left] = s[right];\n    s[right] = temp;\n    left++;\n    right--;\n  }\n  return s;\n}`,
+      testCases: [
+        { input: ["h","e","l","l","o"], expected: ["o","l","l","e","h"] },
+        { input: ["H","a","n","n","a","h"], expected: ["h","a","n","n","a","H"] },
+        { input: ["a"], expected: ["a"] },
+        { input: ["c","o","d","e"], expected: ["e","d","o","c"] }
+      ]
+    };
+
+    // --- SPEECH HELPER ---
+    class SpeechHelper {
+      static speak(text, onStart, onEnd) {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        const clean = text.replace(/[*_#`$]/g, '');
+        const utt = new SpeechSynthesisUtterance(clean);
+        utt.rate = 1.0;
+        utt.pitch = 1.0;
+        utt.onstart = onStart;
+        utt.onend = onEnd;
+        window.speechSynthesis.speak(utt);
+      }
+      static stop() {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+      }
+    }
+
+    // --- MAIN REACT APPLICATION ---
+    function App() {
+      const [page, setPage] = useState('resume'); // Step 1
+      const [fileName, setFileName] = useState("Ramya_Sri_Senior_Resume.pdf");
+      const [fileSize, setFileSize] = useState("184 KB");
+      const [showTextPreview, setShowTextPreview] = useState(false);
+
+      const [user, setUser] = useState({
+        name: "Ramya Sri",
+        email: "ramyasri@example.com",
+        targetJob: "Full Stack Developer",
+        resumeText: `RAMYA SRI — Full Stack Software Engineer\nEmail: ramyasri@example.com | Phone: +91 98765 43210\nSkills: Python, React, JavaScript, Node.js, PostgreSQL, REST APIs, Git, Docker, Redis\nProjects:\n1. Distributed Real-Time Platform: Microservices built with Python, FastAPI, React, and Redis Pub/Sub.\n2. AI Placement Analytics Suite: Database modeling, automated CI/CD pipelines, and JWT auth.\nExperience: 2+ Years | Education: B.Tech in Computer Science`
+      });
+
+      // --- MOCK TEST STATE ---
+      const [testAnswers, setTestAnswers] = useState({});
+      const [testSubmitted, setTestSubmitted] = useState(false);
+      const [testResult, setTestResult] = useState({ scorePercent: 80, correct: 8, total: 10, passed: true });
+
+      // --- 5-STAR INTERVIEW STATE ---
+      const [interviewQIndex, setInterviewQIndex] = useState(0);
+      const [interviewAnswer, setInterviewAnswer] = useState("");
+      const [isAiTalking, setIsAiTalking] = useState(false);
+      const [isRecording, setIsRecording] = useState(false);
+      const [stars, setStars] = useState([null, null, null, null, null]);
+      const [currentStarAwarded, setCurrentStarAwarded] = useState(null);
+
+      // --- CODING STATE ---
+      const [codingCode, setCodingCode] = useState(CODING_TEST_PROBLEM.starterCode);
+      const [codingResults, setCodingResults] = useState(null);
+
+      // Handle File Upload
+      const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const sizeKB = Math.round(file.size / 1024) + " KB";
+        setFileName(file.name);
+        setFileSize(sizeKB);
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const content = event.target.result || user.resumeText;
+          setUser(prev => ({ ...prev, resumeText: typeof content === 'string' ? content : prev.resumeText }));
+        };
+        reader.readAsText(file);
+      };
+
+      // Mock Test Submit (>50% PASS, <=50% FAIL)
+      const handleMockTestSubmit = () => {
+        let correct = 0;
+        MOCK_TEST_DATA.forEach(q => {
+          if (testAnswers[q.id] === q.correctIndex) correct++;
+        });
+        const scorePercent = Math.round((correct / MOCK_TEST_DATA.length) * 100);
+        const passed = scorePercent > 50;
+        setTestResult({
+          scorePercent,
+          correct,
+          total: MOCK_TEST_DATA.length,
+          passed
+        });
+        setTestSubmitted(true);
+      };
+
+      // 5-Star Voice Evaluation
+      const currentInterviewQ = RESUME_5_QUESTIONS[interviewQIndex] || RESUME_5_QUESTIONS[0];
+
+      const handleInterviewAnswerSubmit = () => {
+        if (!interviewAnswer.trim()) return;
+        const lower = interviewAnswer.toLowerCase();
+        const kw = currentInterviewQ.keywords;
+        const matched = kw.filter(k => lower.includes(k));
+        const words = interviewAnswer.split(/\s+/).filter(Boolean).length;
+        
+        const isCorrect = (matched.length >= 1 && words >= 15) || words >= 28;
+        const starColor = isCorrect ? 'gold' : 'red';
+        const updatedStars = [...stars];
+        updatedStars[interviewQIndex] = starColor;
+        setStars(updatedStars);
+        setCurrentStarAwarded(starColor);
+      };
+
+      const handleNextOrGoToCoding = () => {
+        if (interviewQIndex + 1 < 5) {
+          setInterviewQIndex(interviewQIndex + 1);
+          setCurrentStarAwarded(null);
+          setInterviewAnswer("");
+        } else {
+          // DIRECT TO CODING ROUND (Feedback presented after coding!)
+          setPage('coding');
+        }
+      };
+
+      // Web Speech Recognition
+      const toggleMic = () => {
+        if (isRecording) {
+          setIsRecording(false);
+        } else {
+          setIsRecording(true);
+          const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (SpeechRec) {
+            const rec = new SpeechRec();
+            rec.continuous = true;
+            rec.interimResults = true;
+            rec.onresult = (e) => {
+              let str = '';
+              for (let i = 0; i < e.results.length; i++) {
+                str += e.results[i][0].transcript + ' ';
+              }
+              setInterviewAnswer(str);
+            };
+            rec.onend = () => setIsRecording(false);
+            rec.start();
+          } else {
+            setInterviewAnswer(prev => prev + " In our project, I engineered asynchronous backend microservices using Python and PostgreSQL with connection pooling and Redis caching for optimal concurrency.");
+            setIsRecording(false);
+          }
+        }
+      };
+
+      // Run Code & Qualification
+      const handleRunCode = () => {
+        try {
+          const fn = new Function(`${codingCode}\n return reverseString;`)();
+          let passedCount = 0;
+          const results = CODING_TEST_PROBLEM.testCases.map((tc, idx) => {
+            let actual;
+            let pass = false;
+            try {
+              actual = fn(JSON.parse(JSON.stringify(tc.input)));
+              pass = JSON.stringify(actual) === JSON.stringify(tc.expected);
+              if (pass) passedCount++;
+            } catch (e) {
+              actual = `Error: ${e.message}`;
+            }
+            return {
+              testCase: idx + 1,
+              input: JSON.stringify(tc.input),
+              expected: JSON.stringify(tc.expected),
+              actual: JSON.stringify(actual),
+              passed: pass
+            };
+          });
+
+          const isQualified = passedCount === CODING_TEST_PROBLEM.testCases.length;
+          setCodingResults({
+            isQualified,
+            passedCount,
+            totalCount: CODING_TEST_PROBLEM.testCases.length,
+            results
+          });
+        } catch (err) {
+          setCodingResults({
+            isQualified: false,
+            error: `Syntax Error: ${err.message}`,
+            passedCount: 0,
+            totalCount: CODING_TEST_PROBLEM.testCases.length,
+            results: []
+          });
+        }
+      };
+
+      useEffect(() => {
+        if (page === 'interview') {
+          SpeechHelper.speak(currentInterviewQ.question, () => setIsAiTalking(true), () => setIsAiTalking(false));
+        }
+        return () => SpeechHelper.stop();
+      }, [page, interviewQIndex]);
+
+      const totalGoldStars = stars.filter(s => s === 'gold').length;
+
+      return (
+        <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+          
+          {/* Ambient Lighting Gradients */}
+          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-indigo-600/15 via-cyan-500/10 to-transparent blur-[140px] pointer-events-none rounded-full" />
+          <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-purple-600/10 blur-[150px] pointer-events-none rounded-full" />
+          <div className="absolute top-2/3 -right-40 w-[500px] h-[500px] bg-cyan-600/10 blur-[150px] pointer-events-none rounded-full" />
+
+          {/* Top Sticky Header with Step Navigator */}
+          <header className="sticky top-0 z-50 backdrop-blur-2xl bg-dark-950/80 border-b border-white/[0.08] px-4 sm:px-8 py-3.5">
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+              
+              {/* Brand */}
+              <div onClick={() => setPage('resume')} className="flex items-center gap-3 cursor-pointer select-none group">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-primary-500 to-cyan-400 p-[1.5px] shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+                  <div className="w-full h-full bg-dark-900 rounded-[14px] flex items-center justify-center font-black text-white text-sm">
+                    AI
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-extrabold text-base tracking-tight gradient-text-indigo">
+                      InterviewAI
+                    </span>
+                    <span className="text-[9px] uppercase font-mono font-bold tracking-widest px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                      PRO
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-medium">Placement Diagnostic System</p>
+                </div>
+              </div>
+
+              {/* Progress Steps Hub */}
+              <nav className="hidden lg:flex items-center gap-2 text-xs font-semibold">
+                <button
+                  onClick={() => setPage('resume')}
+                  className={`px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
+                    page === 'resume'
+                      ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
+                      : 'bg-slate-900/60 border-white/[0.06] text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-mono">1</span>
+                  Resume Upload
+                </button>
+
+                <button
+                  onClick={() => { setPage('mock-test'); setTestSubmitted(false); setTestAnswers({}); }}
+                  className={`px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
+                    page === 'mock-test'
+                      ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
+                      : 'bg-slate-900/60 border-white/[0.06] text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-mono">2</span>
+                  Assessment Test
+                </button>
+
+                <button
+                  onClick={() => { setPage('interview'); setInterviewQIndex(0); setCurrentStarAwarded(null); setInterviewAnswer(""); setStars([null, null, null, null, null]); }}
+                  className={`px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
+                    page === 'interview'
+                      ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
+                      : 'bg-slate-900/60 border-white/[0.06] text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-mono">3</span>
+                  5-Star Voice Mock
+                </button>
+
+                <button
+                  onClick={() => { setPage('coding'); setCodingResults(null); }}
+                  className={`px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
+                    page === 'coding'
+                      ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
+                      : 'bg-slate-900/60 border-white/[0.06] text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-mono">4</span>
+                  Live Code Lab
+                </button>
+
+                <button
+                  onClick={() => setPage('final-report')}
+                  className={`px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
+                    page === 'final-report'
+                      ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
+                      : 'bg-slate-900/60 border-white/[0.06] text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-mono">5</span>
+                  Scorecard & Feedback 🏆
+                </button>
+              </nav>
+
+              {/* Right User Badge */}
+              <div className="flex items-center gap-3">
+                <div className="hidden sm:flex items-center gap-2 pl-2 pr-3 py-1 rounded-full bg-slate-900/80 border border-white/[0.08] text-xs">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[11px] font-bold text-white">
+                    R
+                  </div>
+                  <span className="font-semibold text-slate-200">{user.name}</span>
+                </div>
+              </div>
+
+            </div>
+          </header>
+
+          {/* MAIN PAGE VIEW */}
+          <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+            
+            {/* ========================================================
+                1. STEP 1: RESUME UPLOAD & ASSESSMENT LAUNCHPAD
+            ======================================================== */}
+            {page === 'resume' && (
+              <div className="space-y-8 animate-fadeIn">
+                
+                {/* Hero Header */}
+                <div className="text-center max-w-3xl mx-auto space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping" />
+                    Step 1: Student Resume Parsing & AI Calibration
+                  </div>
+                  <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+                    Upload Your Resume. <br />
+                    <span className="gradient-text-indigo">Unlock Tailored Assessment Tracks.</span>
+                  </h1>
+                  <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+                    Our AI parser automatically analyzes your projects, skills, and experience to calibrate your <strong>Mock Assessment</strong>, <strong>5-Star Voice Interview</strong>, and <strong>Live Coding Lab</strong>.
+                  </p>
+                </div>
+
+                {/* Luxury Dropzone Box */}
+                <div className="glass-panel rounded-3xl p-8 sm:p-12 text-center space-y-5 relative overflow-hidden">
+                  <input
+                    type="file"
+                    id="resumeUploadInput"
+                    accept=".pdf,.doc,.docx,.txt,.rtf"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  
+                  <label htmlFor="resumeUploadInput" className="cursor-pointer space-y-4 flex flex-col items-center justify-center group">
+                    <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-indigo-600 via-primary-500 to-cyan-400 p-[1.5px] shadow-2xl shadow-indigo-500/30 group-hover:scale-105 transition-transform duration-300">
+                      <div className="w-full h-full bg-dark-900 rounded-[22px] flex items-center justify-center text-3xl">
+                        📄
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <h3 className="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors">
+                        Click to Upload Resume or Drag & Drop File
+                      </h3>
+                      <p className="text-xs text-slate-400 font-mono">
+                        Accepts <strong className="text-indigo-300">.PDF, .DOCX, .TXT</strong> (Max: 10MB)
+                      </p>
+                    </div>
+
+                    <span className="px-8 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:brightness-110 text-white font-extrabold text-xs shadow-xl shadow-indigo-600/25 transition-all">
+                      Browse Document from Computer
+                    </span>
+                  </label>
+                </div>
+
+                {/* Uploaded File Status Tag */}
+                <div className="glass-panel rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl font-bold">
+                      ✓
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-white text-sm">{fileName}</span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          Parsed Successfully
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        File Size: <strong className="text-slate-300">{fileSize}</strong> • Target Role: <strong className="text-indigo-300">{user.targetJob}</strong> • ATS Score: <strong className="text-emerald-400">88/100</strong>
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setShowTextPreview(!showTextPreview)}
+                    className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-white/10 transition-colors"
+                  >
+                    {showTextPreview ? "Hide Resume Text" : "View Extracted Resume"}
+                  </button>
+                </div>
+
+                {showTextPreview && (
+                  <textarea
+                    rows={5}
+                    value={user.resumeText}
+                    onChange={(e) => setUser({ ...user, resumeText: e.target.value })}
+                    className="w-full p-4 rounded-2xl bg-dark-950 border border-white/10 font-mono text-xs text-slate-300 resize-none focus:outline-none focus:border-indigo-500"
+                  />
+                )}
+
+                {/* 3 Streamlined Assessment Stages */}
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Step 2: Choose Your Assessment Track</span>
+                      <h2 className="text-2xl font-black text-white mt-0.5">Available Practice Modules</h2>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    
+                    {/* Stage 1: Mock Online Test */}
+                    <div
+                      onClick={() => { setPage('mock-test'); setTestSubmitted(false); setTestAnswers({}); }}
+                      className="glass-card rounded-3xl p-6 cursor-pointer space-y-4 group"
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                          📝
+                        </span>
+                        <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                          &gt; 50% To Pass
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors">
+                          1. Mock Online Test
+                        </h3>
+                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          10 Questions: Technical role-based MCQs + Quantitative & Logical Aptitude questions.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 group-hover:translate-x-1 transition-transform">
+                        Launch Online Assessment →
+                      </span>
+                    </div>
+
+                    {/* Stage 2: 5-Star Voice Interview */}
+                    <div
+                      onClick={() => { setPage('interview'); setInterviewQIndex(0); setCurrentStarAwarded(null); setInterviewAnswer(""); setStars([null, null, null, null, null]); }}
+                      className="glass-card rounded-3xl p-6 cursor-pointer space-y-4 group neon-border-indigo"
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                          ⭐
+                        </span>
+                        <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                          5 Gold/Red Stars
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
+                          2. AI Voice Interview (5 Stars)
+                        </h3>
+                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          5 Resume-driven questions. Earn Gold Stars ⭐ for correct answers. (Feedback follows after Coding).
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 group-hover:translate-x-1 transition-transform">
+                        Enter 5-Star Voice Room →
+                      </span>
+                    </div>
+
+                    {/* Stage 3: Live Coding */}
+                    <div
+                      onClick={() => { setPage('coding'); setCodingResults(null); }}
+                      className="glass-card rounded-3xl p-6 cursor-pointer space-y-4 group"
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                          💻
+                        </span>
+                        <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                          100% Pass = Qualify
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                          3. Live Coding Lab
+                        </h3>
+                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          Write code directly on-screen. Pass all test cases to achieve QUALIFIED status.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition-transform">
+                        Open Coding Sandbox →
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+            {/* ========================================================
+                2. STEP 2: MOCK ONLINE ASSESSMENT (>50% PASS / <=50% FAIL)
+            ======================================================== */}
+            {page === 'mock-test' && (
+              <div className="space-y-6 animate-fadeIn">
+                
+                {/* Header HUD */}
+                <div className="glass-panel rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div>
+                    <span className="text-xs font-mono font-bold text-indigo-400 uppercase">Assessment Module</span>
+                    <h1 className="text-xl font-bold text-white mt-0.5">Mock Online Assessment Test</h1>
+                    <p className="text-xs text-slate-400">10 Questions: Technical (Role) + Aptitude • <strong>&gt; 50% Cutoff to Pass</strong></p>
+                  </div>
+
+                  {!testSubmitted && (
+                    <button
+                      onClick={handleMockTestSubmit}
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-indigo-600/25 transition-all"
+                    >
+                      Submit Assessment
+                    </button>
+                  )}
+                </div>
+
+                {testSubmitted && testResult ? (
+                  // Results Summary View
+                  <div className="glass-panel rounded-3xl p-6 sm:p-8 space-y-6 animate-fadeIn">
+                    
+                    {/* Pass / Fail Banner */}
+                    <div className={`p-6 rounded-2xl border flex flex-col sm:flex-row items-center justify-between gap-6 ${
+                      testResult.passed ? 'neon-border-emerald bg-emerald-950/30' : 'border-rose-500/40 bg-rose-950/30'
+                    }`}>
+                      <div className="flex items-center gap-4 text-center sm:text-left">
+                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-black shrink-0 ${
+                          testResult.passed ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+                        }`}>
+                          {testResult.passed ? "✓" : "✗"}
+                        </div>
+                        <div>
+                          <span className={`text-xs font-mono font-bold uppercase tracking-wider ${
+                            testResult.passed ? 'text-emerald-400' : 'text-rose-400'
+                          }`}>
+                            {testResult.passed ? "QUALIFIED / PASS (>50%) 🎉" : "FAILED / NOT QUALIFIED (≤50%) ❌"}
+                          </span>
+                          <h2 className="text-2xl font-black text-white mt-0.5">
+                            {testResult.passed ? "Congratulations! You Cleared the Cutoff!" : "Cutoff Not Met (50% or Below)"}
+                          </h2>
+                          <p className="text-xs text-slate-300 mt-1">
+                            {testResult.passed 
+                              ? "You demonstrated strong domain competence. You can now proceed to the 5-Star Voice Interview!"
+                              : "You scored 50% or below. Review the explanations below and retake the test to qualify."}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="bg-dark-950 px-6 py-4 rounded-2xl border border-white/10 text-center shrink-0">
+                        <div className={`text-4xl font-black font-mono ${testResult.passed ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          {testResult.scorePercent}%
+                        </div>
+                        <span className="text-xs text-slate-400">{testResult.correct} / {testResult.total} Correct</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                      <button
+                        onClick={() => { setTestSubmitted(false); setTestAnswers({}); }}
+                        className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-white/10"
+                      >
+                        Retake Assessment
+                      </button>
+
+                      <button
+                        onClick={() => { setPage('interview'); setInterviewQIndex(0); setCurrentStarAwarded(null); setInterviewAnswer(""); setStars([null, null, null, null, null]); }}
+                        className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:brightness-110 text-white font-bold text-xs shadow-lg"
+                      >
+                        Proceed to 5-Star Voice Interview ⭐ →
+                      </button>
+                    </div>
+
+                    {/* Explanations Accordion */}
+                    <div className="space-y-3 pt-4 border-t border-white/[0.08]">
+                      <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">Answer Review & Explanations:</h3>
+                      {MOCK_TEST_DATA.map((q, idx) => {
+                        const isCorrect = testAnswers[q.id] === q.correctIndex;
+                        return (
+                          <div key={q.id} className={`p-4 rounded-2xl border text-xs space-y-1.5 ${
+                            isCorrect ? 'bg-emerald-950/20 border-emerald-500/20' : 'bg-rose-950/20 border-rose-500/20'
+                          }`}>
+                            <div className="flex justify-between font-bold">
+                              <span className="text-white">Q{idx + 1}. {q.question}</span>
+                              <span className={isCorrect ? 'text-emerald-400' : 'text-rose-400'}>{isCorrect ? "✓ Correct" : "✗ Incorrect"}</span>
+                            </div>
+                            <div className="text-slate-400 text-[11px]">Correct Option: <strong className="text-emerald-300">{q.options[q.correctIndex]}</strong></div>
+                            <p className="text-slate-300 text-[11px] font-sans">💡 {q.explanation}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                  </div>
+                ) : (
+                  // Active Questions List
+                  <div className="space-y-4">
+                    {MOCK_TEST_DATA.map((q, qIdx) => (
+                      <div key={q.id} className="glass-panel rounded-2xl p-5 space-y-3">
+                        <div className="flex justify-between text-xs font-mono">
+                          <span className="font-bold text-indigo-400">{q.section}</span>
+                          <span className="text-slate-500">Q{qIdx + 1} of 10</span>
+                        </div>
+                        <h3 className="text-sm font-bold text-white">{qIdx + 1}. {q.question}</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                          {q.options.map((opt, oIdx) => {
+                            const isSelected = testAnswers[q.id] === oIdx;
+                            return (
+                              <div
+                                key={oIdx}
+                                onClick={() => setTestAnswers({ ...testAnswers, [q.id]: oIdx })}
+                                className={`p-3 rounded-xl border cursor-pointer text-xs flex items-center gap-2.5 transition-all ${
+                                  isSelected 
+                                    ? 'bg-indigo-600/30 border-indigo-500 text-white font-semibold shadow-md shadow-indigo-600/20' 
+                                    : 'bg-dark-950/60 border-white/[0.06] text-slate-300 hover:border-white/20'
+                                }`}
+                              >
+                                <span className={`w-5 h-5 rounded-md flex items-center justify-center font-mono font-bold text-[10px] ${
+                                  isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
+                                }`}>
+                                  {String.fromCharCode(65 + oIdx)}
+                                </span>
+                                <span>{opt}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+
+                    <button
+                      onClick={handleMockTestSubmit}
+                      className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-white font-extrabold text-xs shadow-xl shadow-emerald-600/25 transition-all"
+                    >
+                      Submit Assessment & Verify Pass/Fail Cutoff
+                    </button>
+                  </div>
+                )}
+
+              </div>
+            )}
+
+            {/* ========================================================
+                3. STEP 3: 5-STAR RESUME AI VOICE INTERVIEW
+                (Awards Stars & Goes Straight to Coding Round)
+            ======================================================== */}
+            {page === 'interview' && (
+              <div className="space-y-6 animate-fadeIn">
+                
+                {/* 5-Star HUD */}
+                <div className="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <span className="px-3 py-1 rounded-xl bg-indigo-600 text-white font-extrabold text-xs">
+                      Question {interviewQIndex + 1} of 5
+                    </span>
+                    <span className="text-xs text-slate-300 font-semibold">5-Star Resume Voice Round</span>
+                  </div>
+
+                  {/* 5 Stars Rating Indicator */}
+                  <div className="flex items-center gap-2.5 bg-dark-950 px-5 py-2 rounded-2xl border border-white/10">
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mr-1">Star Score:</span>
+                    {stars.map((star, i) => (
+                      <div key={i} className="flex flex-col items-center">
+                        <span className={`text-2xl transition-all duration-300 ${
+                          star === 'gold' ? 'scale-125 drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]' : star === 'red' ? 'scale-125 drop-shadow-[0_0_12px_rgba(244,63,94,0.9)]' : 'opacity-20'
+                        }`}>
+                          {star === 'gold' ? '⭐' : star === 'red' ? '🔴' : '⭐'}
+                        </span>
+                        <span className="text-[9px] font-mono font-bold text-slate-500 mt-0.5">Q{i + 1}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setPage('coding')}
+                    className="text-xs text-slate-400 hover:text-white underline"
+                  >
+                    Skip to Coding Round →
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  
+                  {/* Left 4: AI Hologram Avatar */}
+                  <div className="lg:col-span-4 glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-center space-y-4">
+                    <div className="relative">
+                      <div className={`w-32 h-32 rounded-full p-1 bg-gradient-to-tr ${
+                        isAiTalking ? 'from-indigo-500 via-cyan-400 to-primary-500 ring-4 ring-indigo-500/40 animate-pulse' : isRecording ? 'from-rose-500 via-amber-400 to-primary-500 ring-4 ring-rose-500/40 animate-pulse' : 'from-slate-700 to-slate-800'
+                      } flex items-center justify-center transition-all duration-500 shadow-2xl`}>
+                        <div className="w-full h-full bg-dark-900 rounded-full flex items-center justify-center text-5xl">
+                          🤖
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-xs font-bold text-indigo-300 px-3.5 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30">
+                      {isAiTalking ? "AI Interviewer Speaking..." : isRecording ? "Candidate Speaking (Listening...)" : "AI Ready"}
+                    </div>
+                    <button
+                      onClick={() => SpeechHelper.speak(currentInterviewQ.question, () => setIsAiTalking(true), () => setIsAiTalking(false))}
+                      className="text-xs text-cyan-400 hover:underline flex items-center gap-1"
+                    >
+                      🔊 Replay Voice Question
+                    </button>
+                  </div>
+
+                  {/* Right 8: Question & Answer Workspace */}
+                  <div className="lg:col-span-8 space-y-4">
+                    <div className="glass-panel rounded-3xl p-6 space-y-2">
+                      <span className="text-[10px] font-mono font-bold text-indigo-400 uppercase tracking-widest">{currentInterviewQ.category}</span>
+                      <h2 className="text-lg sm:text-xl font-bold text-white leading-relaxed">"{currentInterviewQ.question}"</h2>
+                    </div>
+
+                    <div className="glass-panel rounded-3xl p-6 space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-slate-300">Your Technical Response:</span>
+                        <button
+                          onClick={toggleMic}
+                          className={`px-4 py-1.5 rounded-xl text-xs font-bold shadow-lg transition-all ${
+                            isRecording ? 'bg-rose-600 text-white animate-pulse' : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                          }`}
+                        >
+                          {isRecording ? "⏹️ Stop Microphone" : "🎤 Answer via Voice (Mic)"}
+                        </button>
+                      </div>
+
+                      <textarea
+                        value={interviewAnswer}
+                        onChange={(e) => setInterviewAnswer(e.target.value)}
+                        placeholder="Speak through your microphone or type your response here..."
+                        rows={5}
+                        className="w-full p-4 rounded-2xl bg-dark-950 border border-white/10 text-xs font-sans text-white resize-none focus:outline-none focus:border-indigo-500 leading-relaxed"
+                      />
+
+                      <div className="flex justify-between items-center pt-1">
+                        <span className="text-[11px] font-mono text-slate-400">{interviewAnswer.split(/\s+/).filter(Boolean).length} words</span>
+                        {!currentStarAwarded ? (
+                          <button
+                            onClick={handleInterviewAnswerSubmit}
+                            disabled={!interviewAnswer.trim()}
+                            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 disabled:opacity-50 text-white font-bold text-xs shadow-md transition-all"
+                          >
+                            ⚡ Submit for Star Evaluation
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handleNextOrGoToCoding}
+                            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:brightness-110 text-white font-extrabold text-xs shadow-lg transition-all"
+                          >
+                            {interviewQIndex + 1 < 5 ? `Next Question (${interviewQIndex + 2}/5) →` : "Proceed to Live Coding Round (Step 4) 💻 →"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Star Awarded Alert */}
+                    {currentStarAwarded && (
+                      <div className={`p-4 rounded-2xl border flex items-center justify-between animate-fadeIn ${
+                        currentStarAwarded === 'gold' ? 'neon-border-indigo bg-amber-950/20 text-amber-200' : 'border-rose-500/40 bg-rose-950/20 text-rose-200'
+                      }`}>
+                        <div className="flex items-center gap-2 font-bold text-xs">
+                          <span>{currentStarAwarded === 'gold' ? 'Gold Star Awarded! ⭐ (Correct & Detailed)' : 'Red Star Awarded 🔴 (Inadequate Detail)'}</span>
+                        </div>
+                        <span className="text-[11px] text-slate-400 font-mono">
+                          {interviewQIndex + 1 < 5 ? "Click 'Next Question' to continue" : "Click 'Proceed to Live Coding'"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+
+              </div>
+            )}
+
+            {/* ========================================================
+                4. STEP 4: LIVE CODING LAB (QUALIFIED / FAILED)
+            ======================================================== */}
+            {page === 'coding' && (
+              <div className="space-y-6 animate-fadeIn">
+                
+                <div className="glass-panel rounded-2xl p-5 flex justify-between items-center">
+                  <div>
+                    <span className="text-xs font-mono font-bold text-emerald-400 uppercase">Coding Lab</span>
+                    <h1 className="text-xl font-bold text-white mt-0.5">Live Algorithmic Assessment Round</h1>
+                    <p className="text-xs text-slate-400">Write code in the sandbox. <strong>Pass 100% test cases to QUALIFY</strong>.</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  
+                  {/* Left 5: Problem Statement */}
+                  <div className="lg:col-span-5 glass-panel rounded-3xl p-6 space-y-3">
+                    <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                      Easy • Strings
+                    </span>
+                    <h2 className="text-lg font-bold text-white">{CODING_TEST_PROBLEM.title}</h2>
+                    <p className="text-xs text-slate-300 leading-relaxed">{CODING_TEST_PROBLEM.description}</p>
+                    
+                    <div className="space-y-2 pt-2">
+                      <h4 className="text-xs font-mono font-bold text-white uppercase">Examples:</h4>
+                      {CODING_TEST_PROBLEM.examples.map((ex, i) => (
+                        <div key={i} className="p-3 rounded-xl bg-dark-950 font-mono text-[11px] text-slate-300 border border-white/[0.04]">
+                          <div>Input: {ex.input}</div>
+                          <div className="text-emerald-300">Output: {ex.output}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right 7: IDE Sandbox */}
+                  <div className="lg:col-span-7 space-y-4">
+                    <div className="glass-panel rounded-3xl p-6 space-y-3">
+                      <div className="flex justify-between items-center text-xs font-bold">
+                        <span className="text-white font-mono">JavaScript Solution Sandbox</span>
+                        <span className="text-slate-400 font-mono">Target: O(N)</span>
+                      </div>
+
+                      <textarea
+                        rows={9}
+                        value={codingCode}
+                        onChange={(e) => setCodingCode(e.target.value)}
+                        className="w-full p-4 rounded-2xl bg-dark-950 border border-white/10 font-mono text-xs text-indigo-300 resize-none focus:outline-none focus:border-indigo-500 leading-relaxed selection:bg-indigo-600"
+                      />
+
+                      <button
+                        onClick={handleRunCode}
+                        className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-white font-extrabold text-xs shadow-xl shadow-emerald-600/25 transition-all"
+                      >
+                        ▶️ Run & Verify Code Against Test Cases
+                      </button>
+                    </div>
+
+                    {/* Qualification Banner & Action to Final Feedback */}
+                    {codingResults && (
+                      <div className="glass-panel rounded-3xl p-5 space-y-3 animate-fadeIn">
+                        <div className={`p-4 rounded-2xl border flex items-center justify-between ${
+                          codingResults.isQualified ? 'neon-border-emerald bg-emerald-950/30' : 'border-rose-500/40 bg-rose-950/30'
+                        }`}>
+                          <div>
+                            <h3 className={`text-base font-extrabold ${codingResults.isQualified ? 'text-emerald-400' : 'text-rose-400'}`}>
+                              {codingResults.isQualified ? "QUALIFIED (PASSED ALL TEST CASES) 🎉" : "FAILED / NOT QUALIFIED ❌"}
+                            </h3>
+                            <p className="text-xs text-slate-300">
+                              {codingResults.isQualified ? "All test cases passed with optimal O(N) runtime!" : `Only ${codingResults.passedCount}/${codingResults.totalCount} test cases passed.`}
+                            </p>
+                          </div>
+                          <span className={`text-2xl font-black font-mono ${codingResults.isQualified ? 'text-emerald-400' : 'text-rose-400'}`}>
+                            {codingResults.passedCount}/{codingResults.totalCount}
+                          </span>
+                        </div>
+
+                        {/* Proceed to Final Feedback Button */}
+                        <div className="p-4 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+                          <div className="text-xs text-slate-300">
+                            <strong className="text-white block">Assessments Finished!</strong>
+                            View your complete student feedback report and placement scorecard.
+                          </div>
+                          <button
+                            onClick={() => setPage('final-report')}
+                            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-primary-500 to-cyan-500 hover:brightness-110 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/30 flex items-center gap-2 shrink-0 transition-all"
+                          >
+                            View Final Student Feedback & Report 🏆
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+
+              </div>
+            )}
+
+            {/* ========================================================
+                5. STEP 5: FINAL COMPREHENSIVE PLACEMENT FEEDBACK REPORT
+                (Given right after Coding Round!)
+            ======================================================== */}
+            {page === 'final-report' && (
+              <div className="space-y-6 animate-fadeIn">
+                <div className="glass-panel rounded-3xl p-6 sm:p-8 space-y-6">
+                  
+                  {/* Top Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.08]">
+                    <div>
+                      <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">Official Placement Diagnostic Report</span>
+                      <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+                        Comprehensive Assessment Feedback Card
+                      </h1>
+                      <p className="text-xs text-slate-400 mt-1">Generated after completing Mock Assessment, 5-Star Voice Interview, and Live Coding Lab.</p>
+                    </div>
+
+                    <div className="text-right bg-dark-950 px-6 py-3 rounded-2xl border border-white/10">
+                      <div className="text-4xl font-black gradient-text-indigo">
+                        88/100
+                      </div>
+                      <span className="text-xs text-slate-400 font-medium">Placement Readiness Score</span>
+                    </div>
+                  </div>
+
+                  {/* 3-Stage Assessment Results Matrix */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="p-4 rounded-2xl bg-dark-950 border border-white/[0.06] space-y-1">
+                      <span className="text-slate-400 text-xs font-mono">1. Mock Online Test</span>
+                      <div className="text-xl font-bold text-emerald-400">PASSED ({testResult.scorePercent}%)</div>
+                      <p className="text-[10px] text-slate-500">{testResult.correct}/{testResult.total} Correct Answers</p>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-dark-950 border border-white/[0.06] space-y-1">
+                      <span className="text-slate-400 text-xs font-mono">2. 5-Star Voice Interview</span>
+                      <div className="text-xl font-bold text-amber-400">{totalGoldStars} / 5 ⭐ Gold Stars</div>
+                      <p className="text-[10px] text-slate-500">Resume project architecture verified</p>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-dark-950 border border-white/[0.06] space-y-1">
+                      <span className="text-slate-400 text-xs font-mono">3. Live Coding Lab</span>
+                      <div className="text-xl font-bold text-emerald-400">QUALIFIED (100%)</div>
+                      <p className="text-[10px] text-slate-500">All test cases passed in $O(N)$ time</p>
+                    </div>
+                  </div>
+
+                  {/* Comprehensive AI Feedback */}
+                  <div className="p-6 rounded-2xl bg-indigo-950/30 border border-indigo-500/25 space-y-4">
+                    <h3 className="text-xs font-mono font-bold text-indigo-300 uppercase tracking-widest">
+                      AI Student Feedback & Detailed Critique:
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                      <div className="p-4 rounded-xl bg-dark-950 border border-emerald-500/20 space-y-1.5">
+                        <strong className="text-emerald-300 text-sm block">✓ Key Strengths:</strong>
+                        <ul className="list-disc list-inside text-slate-300 space-y-1">
+                          <li>Clear articulation of resume projects and database schemas.</li>
+                          <li>Optimal two-pointer algorithmic code implementation in $O(1)$ space.</li>
+                          <li>Passed Aptitude and Technical MCQs with &gt; 50% cutoff.</li>
+                        </ul>
+                      </div>
+
+                      <div className="p-4 rounded-xl bg-dark-950 border border-amber-500/20 space-y-1.5">
+                        <strong className="text-amber-300 text-sm block">💡 Actionable Improvement Plan:</strong>
+                        <ul className="list-disc list-inside text-slate-300 space-y-1">
+                          <li>Mention concrete quantitative metrics (% latency saved).</li>
+                          <li>Explain cache invalidation and distributed lock mechanisms.</li>
+                          <li>Review advanced system design patterns.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={() => setPage('resume')}
+                      className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg transition-all"
+                    >
+                      Start New Assessment 📄
+                    </button>
+                    <button
+                      onClick={() => window.print()}
+                      className="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-white/10"
+                    >
+                      Print Placement Certificate 🖨️
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+          </main>
+
+          {/* Footer */}
+          <footer className="border-t border-white/[0.06] bg-dark-950 px-4 py-8 text-center text-xs text-slate-500 mt-12">
+            © 2026 InterviewAI PRO Platform. Designed for High-Performance Student Placement Preparation.
+          </footer>
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
