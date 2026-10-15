@@ -210,3 +210,9 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #36: admin metrics telemetry and question bank distribution dashboard
+- **Branch**: `feature/pr-36-admin`
+- **Author**: `Senior Staff Quality Engineer <qa.staff@ai-interview.enterprise.internal>`
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
