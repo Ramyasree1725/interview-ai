@@ -30,3 +30,9 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #6: role-based quantitative and logical aptitude MCQ generator
+- **Branch**: `feature/pr-6-role-based`
+- **Author**: `Senior Staff Quality Engineer <qa.staff@ai-interview.enterprise.internal>`
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
