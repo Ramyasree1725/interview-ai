@@ -288,3 +288,9 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #49: adaptive follow-up question tree generator using candidate depth
+- **Branch**: `feature/pr-49-adaptive`
+- **Author**: `Ramya Sri <ramyasree1725@users.noreply.github.com>`
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
