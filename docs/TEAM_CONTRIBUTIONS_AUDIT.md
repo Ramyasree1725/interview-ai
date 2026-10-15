@@ -478,3 +478,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #68: cosine similarity semantic keyword matcher for technical skills
+- **Branch**: `feature/pr-68-cosine`
+- **Author**: `Phani Sree` <23471a4392@gmail.com>
+- **Reviewed & Merged by**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
