@@ -233,3 +233,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #33: real-time audio visualizer frequency wave equalizer canvas
+- **Branch**: `feature/pr-33-real-time`
+- **Author**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Reviewed & Merged by**: `Ramya Sri` <ramyasree1725@users.noreply.github.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
