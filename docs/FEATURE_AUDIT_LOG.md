@@ -6,3 +6,9 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #2: high-dimensional PDF vector parsing for ATS scoring engine
+- **Branch**: `feature/pr-2-high-dimensional`
+- **Author**: `Enterprise Lead Architect <lead.engineer@ai-interview.enterprise.internal>`
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
