@@ -36,3 +36,9 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #7: pass/fail threshold boundary validation at 50% cutoff mark
+- **Branch**: `feature/pr-7-pass/fail`
+- **Author**: `Ramya Sri <ramyasree1725@users.noreply.github.com>`
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
