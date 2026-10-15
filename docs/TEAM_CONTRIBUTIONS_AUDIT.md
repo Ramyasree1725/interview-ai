@@ -338,3 +338,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #48: asynchronous WebAssembly code isolation memory limits
+- **Branch**: `feature/pr-48-asynchronous`
+- **Author**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Reviewed & Merged by**: `Ramya Sri` <ramyasree1725@users.noreply.github.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
