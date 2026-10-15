@@ -324,3 +324,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #46: post-coding interview feedback and printable certificate
+- **Branch**: `feature/pr-46-post-coding`
+- **Author**: `Ramya Sri` <ramyasree1725@users.noreply.github.com>
+- **Reviewed & Merged by**: `Phani Sree` <23471a4392@gmail.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
