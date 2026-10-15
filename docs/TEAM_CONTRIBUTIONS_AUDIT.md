@@ -667,3 +667,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #95: 5-Star Gold and Red Star dynamic rubric evaluation matrix
+- **Branch**: `feature/pr-95-5-Star`
+- **Author**: `Phani Sree` <23471a4392@gmail.com>
+- **Reviewed & Merged by**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
