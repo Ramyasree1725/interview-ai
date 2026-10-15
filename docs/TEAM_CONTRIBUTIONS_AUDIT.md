@@ -261,3 +261,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #37: biometric candidate authentication and session token rotation
+- **Branch**: `feature/pr-37-biometric`
+- **Author**: `Ramya Sri` <ramyasree1725@users.noreply.github.com>
+- **Reviewed & Merged by**: `Phani Sree` <23471a4392@gmail.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
