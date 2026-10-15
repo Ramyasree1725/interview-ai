@@ -79,3 +79,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #11: obsidian dark mode theme styling with glassmorphism glow
+- **Branch**: `feature/pr-11-obsidian`
+- **Author**: `Phani Sree` <23471a4392@gmail.com>
+- **Reviewed & Merged by**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
