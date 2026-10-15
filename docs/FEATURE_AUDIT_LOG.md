@@ -42,3 +42,9 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #8: embedded Monaco code sandbox with AST syntax highlight
+- **Branch**: `feature/pr-8-embedded`
+- **Author**: `Enterprise Lead Architect <lead.engineer@ai-interview.enterprise.internal>`
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
