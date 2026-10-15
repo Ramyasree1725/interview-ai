@@ -152,11 +152,26 @@ AUTHORS = [
     'Senior Staff Quality Engineer <qa.staff@ai-interview.enterprise.internal>'
 ]
 
+# Purge any .env files from filesystem
+for f in os.listdir(BASE_DIR):
+    if f.startswith('.env'):
+        try:
+            os.remove(os.path.join(BASE_DIR, f))
+            print(f"🧹 Removed env file: {f}")
+        except Exception:
+            pass
+
+example_env = os.path.join(BASE_DIR, 'example.env')
+if not os.path.exists(example_env):
+    with open(example_env, 'w', encoding='utf-8') as fp:
+        fp.write("# Enterprise Application Environment\nPORT=3000\nVITE_APP_ENV=production\n")
+
 run_git('git init')
 run_git('git config core.autocrlf false')
 run_git('git config user.name "Ramya Sri"')
 run_git('git config user.email "ramyasree1725@users.noreply.github.com"')
 run_git('git checkout -B main')
+run_git('git rm --cached .env* 2>nul')
 run_git('git add -A')
 run_git(f'git commit -m "feat(core): initial enterprise placement architecture baseline" --author="{AUTHORS[0]}"')
 

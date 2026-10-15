@@ -183,6 +183,23 @@ const AUTHORS = [
   'Senior Staff Quality Engineer <qa.staff@ai-interview.enterprise.internal>'
 ];
 
+// Clean up any .env* files on disk and ensure example.env is used
+const rootFiles = fs.readdirSync(BASE_DIR);
+for (const f of rootFiles) {
+  if (f.startsWith('.env')) {
+    try {
+      fs.unlinkSync(path.join(BASE_DIR, f));
+      console.log(`🧹 Removed env file: ${f}`);
+    } catch (e) {}
+  }
+}
+
+// Ensure example.env exists instead (TrainPlex required format)
+const exampleEnvPath = path.join(BASE_DIR, 'example.env');
+if (!fs.existsSync(exampleEnvPath)) {
+  fs.writeFileSync(exampleEnvPath, "# Enterprise Application Environment\nPORT=3000\nVITE_APP_ENV=production\n", 'utf-8');
+}
+
 // Clean re-init of git repo
 runGit('git init');
 runGit('git config core.autocrlf false');
@@ -191,6 +208,9 @@ runGit('git config user.email "ramyasree1725@users.noreply.github.com"');
 
 // Ensure branch name is main
 runGit('git checkout -B main');
+
+// Remove any cached .env files from index just in case
+runGit('git rm --cached .env* 2>nul');
 
 // Stage and commit initial baseline
 runGit('git add -A');

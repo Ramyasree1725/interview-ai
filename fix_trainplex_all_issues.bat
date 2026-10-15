@@ -17,6 +17,10 @@ echo  Fix 7: Force-push clean history to https://github.com/Ramyasree1725/interv
 echo ===============================================================================
 echo.
 
+:: Purge any .env files before staging
+del /f /q .env* 2>nul
+git rm --cached .env* 2>nul
+
 node scripts\fix_trainplex_and_push.js
 
 echo.
