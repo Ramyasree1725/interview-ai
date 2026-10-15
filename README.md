@@ -58,20 +58,35 @@ An industry-grade, humanized, AI-powered interview preparation platform with dee
 
 ---
 
-## 🚀 How to Run
+## 💻 Getting Started
 
-### Method 1: Instant Browser View (Zero Setup)
-Simply open `app.html` directly in Google Chrome, Microsoft Edge, or Firefox!
-
-### Method 2: Vite Development Server
+### Install
 ```bash
-# Install dependencies
 npm install
-
-# Run Vite dev server
-npm run dev
 ```
-Then open `http://localhost:3000` in your browser.
+
+### Build
+```bash
+npm run build
+```
+
+### Run
+```bash
+# Start Vite development server
+npm run dev
+
+# Or view standalone application in browser
+open app.html
+```
+
+### Test
+```bash
+# Run unit test suites
+npm run test
+
+# Run tests with code coverage analysis
+npm run test:coverage
+```
 
 ---
 
