@@ -296,3 +296,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #42: role-based quantitative and logical aptitude MCQ generator
+- **Branch**: `feature/pr-42-role-based`
+- **Author**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Reviewed & Merged by**: `Ramya Sri` <ramyasree1725@users.noreply.github.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
