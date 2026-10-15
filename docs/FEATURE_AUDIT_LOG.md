@@ -444,3 +444,9 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #75: Web Speech API acoustic noise reduction filter in STT runner
+- **Branch**: `feature/pr-75-Web`
+- **Author**: `Senior Staff Quality Engineer <qa.staff@ai-interview.enterprise.internal>`
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
