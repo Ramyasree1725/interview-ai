@@ -632,3 +632,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #90: admin metrics telemetry and question bank distribution dashboard
+- **Branch**: `feature/pr-90-admin`
+- **Author**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Reviewed & Merged by**: `Ramya Sri` <ramyasree1725@users.noreply.github.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
