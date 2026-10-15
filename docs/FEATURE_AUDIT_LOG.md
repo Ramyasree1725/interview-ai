@@ -198,3 +198,9 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #34: camera posture and eye contact presence simulation HUD
+- **Branch**: `feature/pr-34-camera`
+- **Author**: `Ramya Sri <ramyasree1725@users.noreply.github.com>`
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
