@@ -520,3 +520,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #74: high-dimensional PDF vector parsing for ATS scoring engine
+- **Branch**: `feature/pr-74-high-dimensional`
+- **Author**: `Phani Sree` <23471a4392@gmail.com>
+- **Reviewed & Merged by**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
