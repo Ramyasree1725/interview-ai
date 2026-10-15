@@ -58,3 +58,10 @@
 - **Status**: `Merged`
 - **Automated Tests**: 100% Passed
 
+### Pull Request #8: embedded Monaco code sandbox with AST syntax highlight
+- **Branch**: `feature/pr-8-embedded`
+- **Author**: `Phani Sree` <23471a4392@gmail.com>
+- **Reviewed & Merged by**: `Radhika` <radhikathiriveedhi@gmail.com>
+- **Status**: `Merged`
+- **Automated Tests**: 100% Passed
+
